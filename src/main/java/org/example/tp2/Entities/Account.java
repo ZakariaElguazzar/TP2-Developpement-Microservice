@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.tp2.Enums.accountType;
+import org.example.tp2.Enums.currencyType;
 
 import java.util.Date;
 
@@ -19,7 +20,8 @@ public class Account {
     private String id;
     private Date creationAt;
     private Double balance;
-    private String currency;
+    @Enumerated(EnumType.STRING)
+    private currencyType currency;
     @Enumerated(EnumType.STRING)
     private accountType accountType;
 
