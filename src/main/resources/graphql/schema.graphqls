@@ -1,0 +1,42 @@
+type Query {
+    getAllAccounts: [Account],
+    accountById(id:ID!):Account
+}
+
+type Mutation {
+    createAccount(Account: AccountInput!): Account
+    Update(id: ID!, Account: AccountInput!): Account
+    Delete(id: ID!): Boolean
+}
+
+input AccountInput {
+    balance: Float!
+    accountType: AccountType!
+    currency: CurrencyType!
+}
+
+type Account {
+    id: ID!
+    createdAt: String!
+    balance: Float!
+    accountType: AccountType!
+    currency: CurrencyType!
+}
+
+enum AccountType {
+    SAVING
+    CURRENT
+}
+
+enum CurrencyType {
+    USD
+    EUR
+    GBP
+    JPY
+    AUD
+    CAD
+    CHF
+    CNY
+    SEK
+    NZD
+}
