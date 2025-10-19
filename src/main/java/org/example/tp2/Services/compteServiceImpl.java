@@ -1,10 +1,14 @@
 package org.example.tp2.Services;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.example.tp2.Entities.Compte;
 import org.example.tp2.Repositories.CompteRepo;
+import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
+@Service
+@Transactional
 public class compteServiceImpl implements compteService {
     private CompteRepo compteRepo;
     @Override
