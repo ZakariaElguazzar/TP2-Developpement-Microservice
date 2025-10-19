@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.tp2.Entities.Customer;
 import org.example.tp2.Enums.accountType;
 import org.example.tp2.Enums.currencyType;
 
@@ -17,4 +18,5 @@ public class AccountResponseDTO {
     private accountType accountType;
     private Double balance;
     private Date createdAt;
+    private Customer customer;
 }

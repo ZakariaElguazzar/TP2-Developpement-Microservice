@@ -9,6 +9,12 @@ type Mutation {
     Delete(id: ID!): Boolean
 }
 
+type Customer {
+    id: ID!
+    name: String!
+    accounts: [Account!]
+}
+
 input AccountInput {
     balance: Float!
     accountType: AccountType!
@@ -21,6 +27,7 @@ type Account {
     balance: Float!
     accountType: AccountType!
     currency: CurrencyType!
+    customer: Customer!
 }
 
 enum AccountType {
