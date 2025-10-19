@@ -18,7 +18,7 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private Date creationAt;
+    private Date createdAt;
     private Double balance;
     @Enumerated(EnumType.STRING)
     private currencyType currency;
