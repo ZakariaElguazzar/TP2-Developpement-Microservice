@@ -2,10 +2,14 @@ package org.example.tp2.Services;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.example.tp2.DTOs.AccountRequestDTO;
+import org.example.tp2.DTOs.AccountResponseDTO;
 import org.example.tp2.Entities.Account;
+import org.example.tp2.Mappers.AccountMapper;
 import org.example.tp2.Repositories.accountRepo;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -13,32 +17,47 @@ import java.util.List;
 @Transactional
 public class accountServiceImpl implements accountService {
     private accountRepo accountRepo;
+    private AccountMapper accountMapper;
     @Override
-    public Account createAccount(Account account) {
-        return accountRepo.save(account);
+    public AccountResponseDTO createAccount(AccountRequestDTO accountReq) {
+        Account account =  new Account();
+        account.setAccountType(accountReq.getAccountType());
+        account.setBalance(accountReq.getBalance());
+        account.setCurrency(accountReq.getCurrency());
+        account.setCreationAt(new Date());
+        Account savedAccount = accountRepo.save(account);
+        return accountMapper.fromAccountToAccountResponseDTO(savedAccount);
     }
 
     @Override
-    public void deleteAccount(Account account) {
-        accountRepo.delete(account);
+    public void deleteAccount(String id) {
+        accountRepo.deleteById(id);
     }
 
     @Override
-    public Account searchAccountById(String id) {
-        return accountRepo.findById(id).orElseThrow(()-> new RuntimeException(String.format("Account %s not found",id)));
+    public AccountResponseDTO searchAccountById(String id) {
+        return accountMapper.fromAccountToAccountResponseDTO(accountRepo.findById(id).orElseThrow(()-> new RuntimeException(String.format("Account %s not found",id))));
     }
 
     @Override
-    public List<Account> allAccounts() {
+    public List<AccountResponseDTO> allAccounts() {
         List<Account> accounts = accountRepo.findAll();
         if (accounts.isEmpty()) {
             throw new RuntimeException("No accounts found");
         }
-        return accounts;
+        return accounts.stream()
+                .map(accountMapper::fromAccountToAccountResponseDTO)
+                .toList();
     }
 
     @Override
-    public Account updateAccount(Account account) {
-        return accountRepo.save(account);
+    public AccountResponseDTO updateAccount(String id,AccountRequestDTO accountReq) {
+        AccountResponseDTO existingAccount = searchAccountById(id);
+        if (accountReq.getBalance() != null) existingAccount.setBalance(accountReq.getBalance());
+        if (accountReq.getCurrency() != null) existingAccount.setCurrency(accountReq.getCurrency());
+        if (accountReq.getAccountType() != null) existingAccount.setAccountType(accountReq.getAccountType());
+        Account savedAccount = accountMapper.fromAccountResponseDTOToAccount(existingAccount);
+        savedAccount.setId(id);
+        return accountMapper.fromAccountToAccountResponseDTO(accountRepo.save(savedAccount));
     }
 }
