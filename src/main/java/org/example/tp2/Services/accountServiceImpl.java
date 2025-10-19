@@ -24,14 +24,27 @@ public class accountServiceImpl implements accountService {
         account.setAccountType(accountReq.getAccountType());
         account.setBalance(accountReq.getBalance());
         account.setCurrency(accountReq.getCurrency());
-        account.setCreationAt(new Date());
+        account.setCreatedAt(new Date());
         Account savedAccount = accountRepo.save(account);
         return accountMapper.fromAccountToAccountResponseDTO(savedAccount);
     }
 
     @Override
-    public void deleteAccount(String id) {
-        accountRepo.deleteById(id);
+    public Account createAccount(Account account) {
+        account.setCreatedAt(new Date());
+        return accountRepo.save(account);
+    }
+
+    @Override
+    public Boolean deleteAccount(String id) {
+        try {
+            accountRepo.deleteById(id);
+            return true;
+        }
+        catch (Exception e){
+            return false;
+        }
+
     }
 
     @Override
@@ -59,5 +72,19 @@ public class accountServiceImpl implements accountService {
         Account savedAccount = accountMapper.fromAccountResponseDTOToAccount(existingAccount);
         savedAccount.setId(id);
         return accountMapper.fromAccountToAccountResponseDTO(accountRepo.save(savedAccount));
+    }
+
+    @Override
+    public Account updateAccount(String id,Account account) {
+        AccountResponseDTO existingAccount = searchAccountById(id);
+        System.out.println("DATE2:"+existingAccount.getCreatedAt());
+        Account Account = accountMapper.fromAccountResponseDTOToAccount(existingAccount);
+        if (account.getBalance() != null) Account.setBalance(account.getBalance());
+        if (account.getCurrency() != null) Account.setCurrency(account.getCurrency());
+        if (account.getAccountType() != null) Account.setAccountType(account.getAccountType());
+        Account.setId(id);
+        System.out.println("DATE2:"+existingAccount.getCreatedAt());
+        Account.setCreatedAt(existingAccount.getCreatedAt());
+        return accountRepo.save(Account);
     }
 }
